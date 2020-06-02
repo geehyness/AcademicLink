@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "107075439695",
+    "firebase_url": "https://theacademiclink-test.firebaseio.com",
+    "project_id": "theacademiclink-test",
+    "storage_bucket": "theacademiclink-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107075439695:android:e5cee32f84c50351c8ae3a",
+        "android_client_info": {
+          "package_name": "com.yukicide.theacademiclinkandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107075439695-2r3sjum5i3dss2dpc4mipalgleej4ehh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2q3Y-VEvv6xMvqoSfDyxscyaOcQNKOCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107075439695-2r3sjum5i3dss2dpc4mipalgleej4ehh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

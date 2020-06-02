@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_dashboard"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/nav_homework"
+            android:icon="@drawable/ic_book"
+            android:title="Homework and Assignments" />
+        <item
+            android:id="@+id/nav_timetable"
+            android:icon="@drawable/ic_today"
+            android:title="Timetable" />
+        <item
+            android:id="@+id/nav_attendance"
+            android:icon="@drawable/ic_attendance"
+            android:title="Attendance" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_calendar"
+            android:title="School Calendar" />
+    </group>
+
+    <item android:title="Extra">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_profile"
+                android:title="Profile" />
+            <item
+                android:id="@+id/nav_chats"
+                android:icon="@drawable/ic_chat"
+                android:title="Chats" />
+            <item
+                android:id="@+id/nav_discussions"
+                android:icon="@drawable/ic_discussions"
+                android:title="Discussions" />
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/ic_gallery"
+                android:title="Photo Gallery" />
+            <item
+                android:id="@+id/nav_teachers_calendar"
+                android:icon="@drawable/ic_calendar"
+                android:title="School Calendar" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info"
+                android:title="School Information" />
+        </menu>
+    </item>
+</menu>

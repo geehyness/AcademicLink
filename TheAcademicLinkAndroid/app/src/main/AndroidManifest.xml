@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.yukicide.theacademiclinkandroid">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_dashboard"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_dashboard"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".AppUI.globalUI.notesCRUD.AddNotesActivity"></activity>
+        <activity android:name=".AppUI.globalUI.notesCRUD.NotesActivity" />
+        <activity android:name=".AppUI.teacherUI.assignedPosts.TeacherSubjectActivity" />
+        <activity android:name=".AppUI.adminUI.notificationsCRUD.AddNotificationActivity" />
+        <activity android:name=".AppUI.adminUI.subjectsCRUD.EditSubject" />
+        <activity android:name=".AppUI.adminUI.subjectsCRUD.MandatorySubjectsActivity" />
+        <activity android:name=".AppUI.globalUI.user_management.EditProfileActivity" />
+        <activity android:name=".AppUI.teacherUI.assignedPosts.TeacherClassManagementActivity" />
+        <activity android:name=".AppUI.adminUI.classCRUD.ViewClassActivity" />
+        <activity android:name=".AppUI.adminUI.teacherCRUD.AssignTeacherActivity" />
+        <activity android:name=".AppUI.teacherUI.home.TeacherHomeActivity" />
+        <activity android:name=".AppUI.adminUI.subjectsCRUD.AddSubjectActivity" />
+        <activity android:name=".AppUI.adminUI.subjectsCRUD.ManageSubjectsActivity" />
+        <activity android:name=".AppUI.globalUI.user_management.ViewUserActivity" />
+        <activity android:name=".AppUI.adminUI.teacherCRUD.AddTeacherActivity" />
+        <activity android:name=".AppUI.adminUI.teacherCRUD.ManageTeachersActivity" />
+        <activity android:name=".AppUI.adminUI.classCRUD.AddClassActivity" />
+        <activity android:name=".AppUI.adminUI.classCRUD.ManageClassActivity" />
+        <activity android:name=".AppUI.adminUI.studentCRUD.AddBatchStudentsActivity" />
+        <activity android:name=".AppUI.adminUI.studentCRUD.AddStudentActivity" />
+        <activity android:name=".AppUI.adminUI.studentCRUD.ManageStudentsActivity" />
+        <activity android:name=".AppUI.studentUI.StudentProgressActivity" />
+        <activity android:name=".AppUI.globalUI.information.NotificationActivity" />
+        <activity android:name=".AppUI.globalUI.user_management.LoginActivity" />
+        <activity android:name=".AppUI.adminUI.home.AdminHomeActivity" />
+        <activity android:name=".AppUI.studentUI.home.StudentHomeActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

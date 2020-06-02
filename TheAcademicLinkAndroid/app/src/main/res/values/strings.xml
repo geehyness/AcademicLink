@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">The Academic Link</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="profile_photo">Profile Photo</string>
+    <string name="yukicide_email">yukicide@gmail.com</string>
+    <string name="manage_student_amp_class"><![CDATA[Manage Student & Class]]></string>
+    <string name="manage_staff">Manage Staff</string>
+    <string name="manage_subjects">Manage Subjects</string>
+    <string name="manage_assessment_information">Manage Assessment Information</string>
+    <string name="manage_timetable">Manage Timetable</string>
+    <string name="manage_school_calendar">Manage School Calendar</string>
+    <string name="manage_discussions">Manage Discussions</string>
+    <string name="manage_gallery">Manage Gallery</string>
+    <string name="manage_school_information">Manage School Information</string>
+    <string name="log">Log</string>
+    <string name="extra">Extra</string>
+    <string name="profile">Profile</string>
+    <string name="photo_gallery">Photo Gallery</string>
+    <string name="school_information">School Information</string>
+    <string name="admin_options">Admin Options</string>
+    <string name="chats">Chats</string>
+    <string name="school_calendar">School Calendar</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="profile_unavailable">unavailable</string>
+    <string name="teacher_404">Class Teacher not found!</string>
+    <string name="loading">Loading...</string>
+    <string name="subject_creation_instructions">Add single subject for each grade.  (When unchecked a subject will be added for each class in each grade. eg. Mathematics for Grade 1A and Mathematics for Grade 1B are added.)</string>
+    <string name="error_subject_list">No subjects list found!</string>
+    <string name="instr_mandatory_subject">Make subject mandatory. (Subject will automatically be added for students in class.)</string>
+    <string name="gradeListTitle">Grade List</string>
+    <string name="subjectListTitle">Mark Subjects to set as Mandatory</string>
+    <string name="notifications">Notifications</string>
+    <string name="no_notifications">No new notifications</string>
+</resources>
