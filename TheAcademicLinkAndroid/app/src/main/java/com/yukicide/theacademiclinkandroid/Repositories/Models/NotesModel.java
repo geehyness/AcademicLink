@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class NotesModel {
-    public NotesModel(String name, String details, ArrayList<String> documents, String subjectId, Date uploaded) {
+    public NotesModel(String name, String details, ArrayList<AttachmentModel> documents, String subjectId, Date uploaded) {
         this.name = name;
         this.details = details;
         this.documents = documents;
@@ -28,11 +28,11 @@ public class NotesModel {
         this.details = details;
     }
 
-    public ArrayList<String> getDocuments() {
+    public ArrayList<AttachmentModel> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(ArrayList<String> documents) {
+    public void setDocuments(ArrayList<AttachmentModel> documents) {
         this.documents = documents;
     }
 
@@ -65,5 +65,5 @@ public class NotesModel {
     private String details;
     private String subjectId;
     private Date uploaded;
-    private ArrayList<String> documents = new ArrayList<>();
+    private ArrayList<AttachmentModel> documents = new ArrayList<>();
 }

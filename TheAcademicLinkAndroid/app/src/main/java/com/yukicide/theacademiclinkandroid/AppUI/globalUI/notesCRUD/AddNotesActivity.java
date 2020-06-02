@@ -1,5 +1,6 @@
 package com.yukicide.theacademiclinkandroid.AppUI.globalUI.notesCRUD;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -26,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,6 +40,7 @@ import com.google.gson.Gson;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddBatchStudentsActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddStudentActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.ManageStudentsActivity;
+import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.LoginActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.ViewUserActivity;
 import com.yukicide.theacademiclinkandroid.R;
 import com.yukicide.theacademiclinkandroid.Repositories.Adapters.DocumentAdapter;
@@ -46,8 +49,7 @@ import com.yukicide.theacademiclinkandroid.Repositories.Fixed.StringExtras;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.UserType;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.NotesModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.ProgressTracking.SubjectModel;
-import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.ClassModel;
-import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.StudentModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.*;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.TeacherModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.UserModel;
 import com.yukicide.theacademiclinkandroid.Repositories.UIElements.MyProgressDialog;
@@ -66,8 +68,8 @@ public class AddNotesActivity extends AppCompatActivity {
     private static final int REQ_CODE_PICK_DOC_FILE = 2;
 
     ArrayList<Uri> docArray = new ArrayList<>();
-    ArrayList<String> docStringArray = new ArrayList<>();
-    ArrayList<String> onlineDocArray = new ArrayList<>();
+    ArrayList<AttachmentModel> docStringArray = new ArrayList<>();
+    ArrayList<AttachmentModel> onlineDocArray = new ArrayList<>();
     private ProgressBar progressBarUpload;
 
     private StorageReference storageReference;
@@ -91,25 +93,22 @@ public class AddNotesActivity extends AppCompatActivity {
         addDoc.setOnClickListener(this::showMenu);
 
         Button save = findViewById(R.id.btnSave);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextInputLayout txtTitle = findViewById(R.id.txtNotesTitle),
-                    txtDetails = findViewById(R.id.txtNotesDetails);
+        save.setOnClickListener(v -> {
+            TextInputLayout txtTitle = findViewById(R.id.txtNotesTitle),
+                txtDetails = findViewById(R.id.txtNotesDetails);
 
-                if (txtTitle.getEditText().getText().toString().isEmpty()) {
-                    txtTitle.getEditText().requestFocus();
-                    txtTitle.getEditText().setError("Title cannot be empty.");
-                    return;
-                } else if (txtDetails.getEditText().getText().toString().isEmpty()) {
-                    txtDetails.getEditText().requestFocus();
-                    txtDetails.getEditText().setError("Details cannot be empty.");
-                    return;
-                }
-
-                progressBarUpload.setVisibility(View.VISIBLE);
-                uploadFile(0, txtTitle.getEditText().getText().toString(), txtDetails.getEditText().getText().toString());
+            if (txtTitle.getEditText().getText().toString().isEmpty()) {
+                txtTitle.getEditText().requestFocus();
+                txtTitle.getEditText().setError("Title cannot be empty.");
+                return;
+            } else if (txtDetails.getEditText().getText().toString().isEmpty()) {
+                txtDetails.getEditText().requestFocus();
+                txtDetails.getEditText().setError("Details cannot be empty.");
+                return;
             }
+
+            progressBarUpload.setVisibility(View.VISIBLE);
+            uploadFile(0, txtTitle.getEditText().getText().toString(), txtDetails.getEditText().getText().toString());
         });
 
         progressBarUpload = findViewById(R.id.progressBarUpload);
@@ -144,8 +143,9 @@ public class AddNotesActivity extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton("Add", (dialog, whichButton) -> {
                                 if (!txtLink.getText().toString().isEmpty()) {
-                                    onlineDocArray.add(txtLink.getText().toString());
-                                    docStringArray.add(txtLink.getText().toString());
+                                    AttachmentModel attachment = new AttachmentModel(txtLink.getText().toString(), false);
+                                    onlineDocArray.add(attachment);
+                                    docStringArray.add(attachment);
                                 } else {
                                     txtLink.requestFocus();
                                     txtLink.setError("Link cannot be empty!");
@@ -220,7 +220,7 @@ public class AddNotesActivity extends AppCompatActivity {
             if ((data != null) && (data.getData() != null)) {
                 docArray.add(0, data.getData());
                 //docStringArray.add(data.getDataString());
-                docStringArray.add(0, getFileName(data.getData()));
+                docStringArray.add(0, new AttachmentModel(getFileName(data.getData()), true));
                 docAdapter.notifyDataSetChanged();
             }
         }
@@ -254,36 +254,41 @@ public class AddNotesActivity extends AppCompatActivity {
             progressBarUpload.setVisibility(View.GONE);
             //txtProgress.setVisibility(View.GONE);
 
-            if (docArray.size() != onlineDocArray.size()){
-                Toast.makeText(this, "THIS SUCKS", Toast.LENGTH_SHORT).show();
+            if (onlineDocArray.isEmpty()){
+                new AlertDialog.Builder(AddNotesActivity.this, R.style.CustomDialogTheme)
+                        .setIcon(R.drawable.ic_error_outline)
+                        .setTitle("Error")
+                        .setMessage("Add atleast 1 document or link to learning resource!")
+                        .setPositiveButton("Ok", null)
+                        .show();
                 return;
             }
 
             NotesModel currItem = new NotesModel(name, details, onlineDocArray, subjectModel.getId(), new Date());
 
             FirebaseFirestore ff = FirebaseFirestore.getInstance();
-            ff.collection(CollectionName.NOTES).add(currItem).addOnSuccessListener(documentReference -> {
-                finish();
-            });
-
-            return;
+            ff.collection(CollectionName.NOTES).add(currItem).addOnSuccessListener(documentReference -> finish())
+            .addOnFailureListener(e -> new AlertDialog.Builder(AddNotesActivity.this, R.style.CustomDialogTheme)
+                    .setIcon(R.drawable.ic_error_outline)
+                    .setTitle("Error")
+                    .setMessage(e.getMessage())
+                    .setPositiveButton("Ok", null)
+                    .show());
         } else {
-            final StorageReference fileRef = storageReference.child(docStringArray.get(position) + new Date() + "." + fileExtension(docArray.get(position)));
+            final StorageReference fileRef = storageReference.child(docStringArray.get(position).getUrl() + new Date() + "." + fileExtension(docArray.get(position)));
             uploadTask = fileRef.putFile(docArray.get(position))
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    onlineDocArray.add(uri.toString());
-                                    Log.d("image", uri.toString());
-                                    uploadFile(position + 1, name, details);
-                                }
-                            });
-                        }
+                    .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        onlineDocArray.add(new AttachmentModel(uri.toString(), true));
+                        uploadFile(position + 1, name, details);
+                    }))
+                    .addOnFailureListener(e -> {
+                        new AlertDialog.Builder(AddNotesActivity.this, R.style.CustomDialogTheme)
+                                .setIcon(R.drawable.ic_error_outline)
+                                .setTitle("Error")
+                                .setMessage(e.getMessage())
+                                .setPositiveButton("Ok", null)
+                                .show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(AddNotesActivity.this, "Unable to upload file!\nPlease retry.", Toast.LENGTH_SHORT).show())
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

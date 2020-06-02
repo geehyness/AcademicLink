@@ -12,12 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yukicide.theacademiclinkandroid.R;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.AttachmentModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.NotificationViewHolder> {
-    private ArrayList<String> DocumentList;
+    private ArrayList<AttachmentModel> DocumentList;
     private DocumentAdapter.OnItemClickListener audioListener;
     private DocumentAdapter.OnItemLongClickListener audioMenuListener;
 
@@ -86,7 +87,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
         }
     }
 
-    public DocumentAdapter(ArrayList<String> exampleList) {
+    public DocumentAdapter(ArrayList<AttachmentModel> exampleList) {
         DocumentList = exampleList;
     }
 
@@ -101,7 +102,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public void onBindViewHolder(@NonNull DocumentAdapter.NotificationViewHolder notificationViewHolder, int i) {
-        String currentItem = DocumentList.get(i);
+        String currentItem = DocumentList.get(i).getUrl();
 
         notificationViewHolder.docTitle.setText(currentItem);
     }
