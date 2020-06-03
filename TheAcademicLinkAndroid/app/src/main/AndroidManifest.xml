@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AppUI.globalUI.notesCRUD.AddNotesActivity"></activity>
+        <activity android:name=".AppUI.globalUI.notesCRUD.ViewNotesActivity"></activity>
+        <activity android:name=".AppUI.globalUI.notesCRUD.AddNotesActivity" />
         <activity android:name=".AppUI.globalUI.notesCRUD.NotesActivity" />
         <activity android:name=".AppUI.teacherUI.assignedPosts.TeacherSubjectActivity" />
         <activity android:name=".AppUI.adminUI.notificationsCRUD.AddNotificationActivity" />

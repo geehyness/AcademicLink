@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yukicide.theacademiclinkandroid.R;
-import com.yukicide.theacademiclinkandroid.Repositories.Models.AttachmentModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Notes.AttachmentModel;
 
 import java.io.IOException;
 import java.util.ArrayList;

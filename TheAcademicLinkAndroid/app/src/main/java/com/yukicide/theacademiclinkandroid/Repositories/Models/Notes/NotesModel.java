@@ -1,16 +1,24 @@
-package com.yukicide.theacademiclinkandroid.Repositories.Models;
+package com.yukicide.theacademiclinkandroid.Repositories.Models.Notes;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 public class NotesModel {
-    public NotesModel(String name, String details, ArrayList<AttachmentModel> documents, String subjectId, Date uploaded) {
+    public NotesModel(String name, String details, String subjectId, Date uploaded, ArrayList<AttachmentModel> documents, String teacherID) {
         this.name = name;
         this.details = details;
-        this.documents = documents;
         this.subjectId = subjectId;
         this.uploaded = uploaded;
+        this.documents = documents;
+        this.teacherID = teacherID;
     }
+
+    public NotesModel() {
+    }
+
+    public String getTeacherID() { return teacherID; }
+
+    public void setTeacherID(String teacherID) { this.teacherID = teacherID; }
 
     public String getName() {
         return name;
@@ -66,4 +74,5 @@ public class NotesModel {
     private String subjectId;
     private Date uploaded;
     private ArrayList<AttachmentModel> documents = new ArrayList<>();
+    private String teacherID;
 }

@@ -1,10 +1,12 @@
-package com.yukicide.theacademiclinkandroid.Repositories.Models;
+package com.yukicide.theacademiclinkandroid.Repositories.Models.Notes;
 
 public class AttachmentModel {
     private String url;
+    private String name;
     private boolean doc;
 
-    public AttachmentModel(String url, boolean doc) {
+    public AttachmentModel(String name, String url, boolean doc) {
+        this.name = name;
         this.url = url;
         this.doc = doc;
     }
@@ -28,3 +30,4 @@ public class AttachmentModel {
         this.doc = doc;
     }
 }
+

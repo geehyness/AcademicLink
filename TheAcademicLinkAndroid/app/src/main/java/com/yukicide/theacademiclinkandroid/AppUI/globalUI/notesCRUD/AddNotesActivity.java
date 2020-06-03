@@ -1,41 +1,32 @@
 package com.yukicide.theacademiclinkandroid.AppUI.globalUI.notesCRUD;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddBatchStudentsActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddStudentActivity;
@@ -47,18 +38,16 @@ import com.yukicide.theacademiclinkandroid.Repositories.Adapters.DocumentAdapter
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.CollectionName;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.StringExtras;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.UserType;
-import com.yukicide.theacademiclinkandroid.Repositories.Models.NotesModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Notes.AttachmentModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Notes.NotesModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.ProgressTracking.SubjectModel;
-import com.yukicide.theacademiclinkandroid.Repositories.Models.*;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.TeacherModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.UserModel;
 import com.yukicide.theacademiclinkandroid.Repositories.UIElements.MyProgressDialog;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 public class AddNotesActivity extends AppCompatActivity {
     private UserModel currentUser;
@@ -117,6 +106,9 @@ public class AddNotesActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference("items/" + subjectModel.getId());
 
         docRecyclerInit();
+
+        ImageView back = findViewById(R.id.btnBack);
+        back.setOnClickListener(v -> finish());
     }
 
     public void showMenu(View v) {
@@ -143,7 +135,7 @@ public class AddNotesActivity extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton("Add", (dialog, whichButton) -> {
                                 if (!txtLink.getText().toString().isEmpty()) {
-                                    AttachmentModel attachment = new AttachmentModel(txtLink.getText().toString(), false);
+                                    AttachmentModel attachment = new AttachmentModel("", txtLink.getText().toString(), false);
                                     onlineDocArray.add(attachment);
                                     docStringArray.add(attachment);
                                 } else {
@@ -220,7 +212,7 @@ public class AddNotesActivity extends AppCompatActivity {
             if ((data != null) && (data.getData() != null)) {
                 docArray.add(0, data.getData());
                 //docStringArray.add(data.getDataString());
-                docStringArray.add(0, new AttachmentModel(getFileName(data.getData()), true));
+                docStringArray.add(0, new AttachmentModel(getFileName(data.getData()), getFileName(data.getData()), true));
                 docAdapter.notifyDataSetChanged();
             }
         }
@@ -264,7 +256,7 @@ public class AddNotesActivity extends AppCompatActivity {
                 return;
             }
 
-            NotesModel currItem = new NotesModel(name, details, onlineDocArray, subjectModel.getId(), new Date());
+            NotesModel currItem = new NotesModel(name, details, subjectModel.getId(), new Date(),onlineDocArray, currentUser.getId());
 
             FirebaseFirestore ff = FirebaseFirestore.getInstance();
             ff.collection(CollectionName.NOTES).add(currItem).addOnSuccessListener(documentReference -> finish())
@@ -278,7 +270,7 @@ public class AddNotesActivity extends AppCompatActivity {
             final StorageReference fileRef = storageReference.child(docStringArray.get(position).getUrl() + new Date() + "." + fileExtension(docArray.get(position)));
             uploadTask = fileRef.putFile(docArray.get(position))
                     .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        onlineDocArray.add(new AttachmentModel(uri.toString(), true));
+                        onlineDocArray.add(new AttachmentModel(getFileName(docArray.get(position)), uri.toString(), true));
                         uploadFile(position + 1, name, details);
                     }))
                     .addOnFailureListener(e -> {

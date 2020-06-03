@@ -32,8 +32,8 @@
         android:layout_height="1dp"
         android:background="@color/colorDivider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/isMandatory"
+        app:layout_constraintStart_toStartOf="@+id/txtSubjectTitle" />
 
     <CheckBox
         android:id="@+id/isMandatory"

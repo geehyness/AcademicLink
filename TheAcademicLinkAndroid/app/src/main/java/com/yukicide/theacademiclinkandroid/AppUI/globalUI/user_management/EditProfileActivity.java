@@ -283,7 +283,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         date = tempDate;
 
-        Objects.requireNonNull(dob.getEditText()).setText(sdf.format(myCal.getTime()));
+        Objects.requireNonNull(dob.getEditText()).setText(sdf.format(date.getTime()));
     }
 
     private void displayUserInfo() {
