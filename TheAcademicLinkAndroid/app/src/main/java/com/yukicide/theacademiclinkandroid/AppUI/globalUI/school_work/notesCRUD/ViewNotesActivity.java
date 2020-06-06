@@ -1,4 +1,4 @@
-package com.yukicide.theacademiclinkandroid.AppUI.globalUI.notesCRUD;
+package com.yukicide.theacademiclinkandroid.AppUI.globalUI.school_work.notesCRUD;
 
 import androidx.appcompat.app.AppCompatActivity;
 

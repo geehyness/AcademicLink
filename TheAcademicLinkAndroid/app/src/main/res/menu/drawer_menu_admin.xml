@@ -23,10 +23,6 @@
                 android:icon="@drawable/ic_subject"
                 android:title="@string/manage_subjects" />
             <item
-                android:id="@+id/nav_admin_assessment"
-                android:icon="@drawable/ic_book"
-                android:title="@string/manage_assessment_information" />
-            <item
                 android:id="@+id/nav_admin_timetable"
                 android:icon="@drawable/ic_today"
                 android:title="@string/manage_timetable" />
@@ -34,6 +30,7 @@
                 android:id="@+id/nav_admin_calendar"
                 android:icon="@drawable/ic_calendar"
                 android:title="@string/manage_school_calendar" />
+            <!--
             <item
                 android:id="@+id/nav_admin_social_platform"
                 android:icon="@drawable/ic_discussions"
@@ -42,6 +39,8 @@
                 android:id="@+id/nav_admin_gallery"
                 android:icon="@drawable/ic_gallery"
                 android:title="@string/manage_gallery" />
+
+                -->
             <item
                 android:id="@+id/nav_admin_info"
                 android:icon="@drawable/ic_info"
@@ -59,6 +58,7 @@
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/ic_profile"
                 android:title="Profile" />
+            <!--
             <item
                 android:id="@+id/nav_chats"
                 android:icon="@drawable/ic_chat"
@@ -79,6 +79,7 @@
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_info"
                 android:title="School Information" />
+                -->
         </menu>
     </item>
 </menu>

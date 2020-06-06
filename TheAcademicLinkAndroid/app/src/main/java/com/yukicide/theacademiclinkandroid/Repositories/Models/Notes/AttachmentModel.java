@@ -29,5 +29,13 @@ public class AttachmentModel {
     public void setDoc(boolean doc) {
         this.doc = doc;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 

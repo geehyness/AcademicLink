@@ -17,7 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
-import com.yukicide.theacademiclinkandroid.AppUI.teacherUI.assignedPosts.TeacherClassManagementActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.LoginActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.ViewUserActivity;
 import com.yukicide.theacademiclinkandroid.R;
@@ -75,14 +74,16 @@ public class TeacherHomeActivity extends AppCompatActivity implements Navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_dashboard:
+            case R.id.nav_teachers_dashboard:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new TeacherDashboardFragment()).commit();
                 break;
 
             case R.id.nav_teachers_class:
-                startActivity(new Intent(TeacherHomeActivity.this, TeacherClassManagementActivity.class)
-                    .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+                /*startActivity(new Intent(TeacherHomeActivity.this, TeacherClassManagementActivity.class)
+                    .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));*/
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new TeacherClassManagementFragment()).commit();
                 break;
 
             case R.id.nav_profile:

@@ -8,7 +8,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.yukicide.theacademiclinkandroid.AppUI.globalUI.notesCRUD.NotesActivity;
+import com.yukicide.theacademiclinkandroid.AppUI.globalUI.school_work.assignmentsCRUD.AssignmentsActivity;
+import com.yukicide.theacademiclinkandroid.AppUI.globalUI.school_work.notesCRUD.NotesActivity;
 import com.yukicide.theacademiclinkandroid.R;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.StringExtras;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.UserType;
@@ -36,12 +37,16 @@ public class TeacherSubjectActivity extends AppCompatActivity {
         else
             txtSubjectName.setText(String.format("%s Grade %d", subjectModel.getName(), subjectModel.getGrade()));
 
-        CardView cardMotes = findViewById(R.id.cardNotes),
+        CardView cardNotes = findViewById(R.id.cardNotes),
                 cardAssignments = findViewById(R.id.cardAssignments),
                 cardQuizz = findViewById(R.id.cardQuiz),
                 cardMarks = findViewById(R.id.cardMarks);
 
-        cardMotes.setOnClickListener(v -> startActivity(new Intent(TeacherSubjectActivity.this, NotesActivity.class)
+        cardNotes.setOnClickListener(v -> startActivity(new Intent(TeacherSubjectActivity.this, NotesActivity.class)
+            .putExtra(StringExtras.SUBJECT, (new Gson()).toJson(subjectModel))
+            .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser))));
+
+        cardAssignments.setOnClickListener(v -> startActivity(new Intent(TeacherSubjectActivity.this, AssignmentsActivity.class)
             .putExtra(StringExtras.SUBJECT, (new Gson()).toJson(subjectModel))
             .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser))));
     }

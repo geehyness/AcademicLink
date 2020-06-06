@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBG"
-    tools:context=".AppUI.globalUI.school_work.notesCRUD.NotesActivity">
+    tools:context=".AppUI.globalUI.school_work.assignmentsCRUD.AssignmentsActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/admin_dash"
@@ -40,7 +40,7 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddNotes"
+        android:id="@+id/btnAddAssignment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -52,7 +52,7 @@
         app:srcCompat="@drawable/ic_file_upload" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notesRecycler"
+        android:id="@+id/assignmentsRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

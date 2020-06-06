@@ -10,21 +10,15 @@
             android:id="@+id/nav_teachers_timetable"
             android:icon="@drawable/ic_today"
             android:title="Timetable" />
+        <item
+            android:id="@+id/nav_teachers_class"
+            android:icon="@drawable/ic_class"
+            android:title="Class Management" />
+        <item
+            android:id="@+id/nav_teachers_homework"
+            android:icon="@drawable/ic_book"
+            android:title="Homework and Assignments" />
     </group>
-
-    <item
-        android:title="Teachers">
-        <menu>
-            <item
-                android:id="@+id/nav_teachers_class"
-                android:icon="@drawable/ic_class"
-                android:title="Class Management" />
-            <item
-                android:id="@+id/nav_teachers_homework"
-                android:icon="@drawable/ic_book"
-                android:title="Homework and Assignments" />
-        </menu>
-    </item>
 
     <item android:title="Extra">
         <menu>
@@ -32,6 +26,8 @@
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/ic_profile"
                 android:title="Profile" />
+
+            <!--
             <item
                 android:id="@+id/nav_chats"
                 android:icon="@drawable/ic_chat"
@@ -48,6 +44,8 @@
                 android:id="@+id/nav_teachers_calendar"
                 android:icon="@drawable/ic_calendar"
                 android:title="School Calendar" />
+            -->
+
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_info"

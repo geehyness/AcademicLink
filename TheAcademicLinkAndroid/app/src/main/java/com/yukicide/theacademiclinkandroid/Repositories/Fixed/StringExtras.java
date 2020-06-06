@@ -7,6 +7,7 @@ public class StringExtras {
     public static final String ASSIGN_SUBJECT = "ASSIGN_SUBJECT";
     public static final String SUBJECT = "SUBJECT";
     public static final String NOTES = "NOTES";
+    public static final String ASSIGNMENTS = "ASSIGNMENTS";
     public static String CURRENT_USER = "CURRENT_USER";
     public static String CLASS = "CLASS";
 }

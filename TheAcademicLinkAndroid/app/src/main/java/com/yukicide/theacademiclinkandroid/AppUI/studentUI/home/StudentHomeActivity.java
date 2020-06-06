@@ -103,39 +103,39 @@ public class StudentHomeActivity extends AppCompatActivity implements Navigation
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new DashboardFragment()).commit();
                 break;
-            case R.id.nav_homework:
+            /*case R.id.nav_homework:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new HomeworkFragment()).commit();
-                break;
+                break;*/
             case R.id.nav_timetable:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new TimetableFragment()).commit();
                 break;
-            case R.id.nav_calendar:
+            /*case R.id.nav_calendar:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SchoolCalendarFragment()).commit();
-                break;
-            case R.id.nav_discussions:
+                break;*/
+            /*case R.id.nav_discussions:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new DiscussionsFragment()).commit();
-                break;
-            case R.id.nav_attendance:
+                break;*/
+            /*case R.id.nav_attendance:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AttendanceFragment()).commit();
-                break;
-            case R.id.nav_chats:
+                break;*/
+            /*case R.id.nav_chats:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ChatsFragment()).commit();
-                break;
+                break;*/
 
             case R.id.nav_profile:
                 startActivity(new Intent(this, ViewUserActivity.class)
                         .putExtra(StringExtras.PROFILE_USER, (new Gson()).toJson(currentUser))
                         .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
                 break;
-            case R.id.nav_gallery:
+            /*case R.id.nav_gallery:
                 Toast.makeText(this, "Gallery", Toast.LENGTH_SHORT).show();
-                break;
+                break;*/
             case R.id.nav_info:
                 Toast.makeText(this, "Info", Toast.LENGTH_SHORT).show();
                 break;

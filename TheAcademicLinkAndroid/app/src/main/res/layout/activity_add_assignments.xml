@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AppUI.globalUI.school_work.notesCRUD.AddNotesActivity">
+    tools:context=".AppUI.globalUI.school_work.assignmentsCRUD.AddAssignmentsActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
@@ -118,74 +118,92 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtNotesDetails" />
+        app:layout_constraintTop_toBottomOf="@+id/datePicker1" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Files"
+        android:layout_marginTop="24dp"
+        android:text="File:"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorTextPrimary"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider19" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/docsRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/divider21"
-        app:layout_constraintEnd_toEndOf="@+id/divider19"
-        app:layout_constraintStart_toStartOf="@+id/divider19"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddDoc"
+    <TextView
+        android:id="@+id/textView26"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:tint="@color/colorTextIcons"
-        app:layout_constraintBottom_toTopOf="@+id/cardView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        android:layout_marginStart="16dp"
+        android:text="Due Date:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/datePicker1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/datePicker1" />
 
     <ProgressBar
         android:id="@+id/progressBarUpload"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView4"
-        app:layout_constraintEnd_toEndOf="@+id/docsRecycler"
-        app:layout_constraintStart_toStartOf="@+id/docsRecycler" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/divider19"
+        app:layout_constraintStart_toStartOf="@+id/divider19"
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
-    <View
-        android:id="@+id/divider20"
+    <TextView
+        android:id="@+id/txtDueDate"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/docsRecycler"
-        app:layout_constraintEnd_toEndOf="@+id/docsRecycler"
-        app:layout_constraintStart_toStartOf="@+id/docsRecycler" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toEndOf="@+id/textView26"
+        app:layout_constraintTop_toBottomOf="@+id/txtNotesDetails" />
 
-    <View
-        android:id="@+id/divider21"
+    <TextView
+        android:id="@+id/txtDocName"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/progressBarUpload"
-        app:layout_constraintEnd_toEndOf="@+id/docsRecycler"
-        app:layout_constraintStart_toStartOf="@+id/docsRecycler" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView16"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddDoc"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toTopOf="@+id/textView16" />
+
+    <ImageView
+        android:id="@+id/btnAddDoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtDocName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtDocName"
+        app:srcCompat="@drawable/ic_add" />
+
+
+    <DatePicker
+        android:id="@+id/datePicker1"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView26"
+        app:layout_constraintTop_toBottomOf="@+id/txtNotesDetails" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

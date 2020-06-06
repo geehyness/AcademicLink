@@ -1,4 +1,4 @@
-package com.yukicide.theacademiclinkandroid.AppUI.globalUI.notesCRUD;
+package com.yukicide.theacademiclinkandroid.AppUI.globalUI.school_work.notesCRUD;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,11 +28,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.gson.Gson;
-import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddBatchStudentsActivity;
-import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.AddStudentActivity;
-import com.yukicide.theacademiclinkandroid.AppUI.adminUI.studentCRUD.ManageStudentsActivity;
-import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.LoginActivity;
-import com.yukicide.theacademiclinkandroid.AppUI.globalUI.user_management.ViewUserActivity;
 import com.yukicide.theacademiclinkandroid.R;
 import com.yukicide.theacademiclinkandroid.Repositories.Adapters.DocumentAdapter;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.CollectionName;
@@ -43,7 +38,6 @@ import com.yukicide.theacademiclinkandroid.Repositories.Models.Notes.NotesModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.ProgressTracking.SubjectModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.TeacherModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.UserModel;
-import com.yukicide.theacademiclinkandroid.Repositories.UIElements.MyProgressDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,7 +97,7 @@ public class AddNotesActivity extends AppCompatActivity {
         progressBarUpload = findViewById(R.id.progressBarUpload);
         progressBarUpload.setVisibility(View.GONE);
 
-        storageReference = FirebaseStorage.getInstance().getReference("items/" + subjectModel.getId());
+        storageReference = FirebaseStorage.getInstance().getReference("notes/" + subjectModel.getId());
 
         docRecyclerInit();
 
@@ -259,8 +253,9 @@ public class AddNotesActivity extends AppCompatActivity {
             NotesModel currItem = new NotesModel(name, details, subjectModel.getId(), new Date(),onlineDocArray, currentUser.getId());
 
             FirebaseFirestore ff = FirebaseFirestore.getInstance();
-            ff.collection(CollectionName.NOTES).add(currItem).addOnSuccessListener(documentReference -> finish())
-            .addOnFailureListener(e -> new AlertDialog.Builder(AddNotesActivity.this, R.style.CustomDialogTheme)
+            ff.collection(CollectionName.NOTES).add(currItem)
+                .addOnSuccessListener(documentReference -> finish())
+                .addOnFailureListener(e -> new AlertDialog.Builder(AddNotesActivity.this, R.style.CustomDialogTheme)
                     .setIcon(R.drawable.ic_error_outline)
                     .setTitle("Error")
                     .setMessage(e.getMessage())
