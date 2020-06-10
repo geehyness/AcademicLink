@@ -10,6 +10,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,7 +22,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.gson.Gson;
 import com.yukicide.theacademiclinkandroid.AppUI.adminUI.home.AdminHomeActivity;
 import com.yukicide.theacademiclinkandroid.AppUI.studentUI.home.StudentHomeActivity;
@@ -31,6 +34,10 @@ import com.yukicide.theacademiclinkandroid.Repositories.Fixed.CollectionName;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.Gender;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.StringExtras;
 import com.yukicide.theacademiclinkandroid.Repositories.Fixed.UserType;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.AdminModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.ParentModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.StudentModel;
+import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.TeacherModel;
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.UserModel;
 import com.yukicide.theacademiclinkandroid.Repositories.UIElements.MyProgressDialog;
 
@@ -43,10 +50,17 @@ import java.util.Objects;
 
 public class EditProfileActivity extends AppCompatActivity {
     UserModel currentUser, profileUser;
+    StudentModel studentModel;
+    TeacherModel teacherModel;
+    AdminModel adminModel;
+    ParentModel parentModel;
+
     TextInputLayout password, email, fname, oname, sname, dname, dob, phone, address;
     Spinner gender;
     ImageView subjectSelect, btnDOB;
     TextView selectedList, lblSelected;
+
+    MyProgressDialog progressDialog;
 
     Date date;
 
@@ -57,6 +71,51 @@ public class EditProfileActivity extends AppCompatActivity {
 
         profileUser = (new Gson()).fromJson(getIntent().getStringExtra(StringExtras.PROFILE_USER), UserModel.class);
         currentUser = (new Gson()).fromJson(getIntent().getStringExtra(StringExtras.CURRENT_USER), UserModel.class);
+
+
+
+
+
+
+
+        /*new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                .setIcon(R.drawable.ic_info)
+                .setTitle("Warning")
+                .setMessage("This interface is under construction!")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    if (currentUser.getUserType().equals(UserType.ADMIN)){
+                        startActivity(new Intent(EditProfileActivity.this, AdminHomeActivity.class)
+                                .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+                        finish();
+                    } else if (currentUser.getUserType().equals(UserType.TEACHER)){
+                        startActivity(new Intent(EditProfileActivity.this, TeacherHomeActivity.class)
+                                .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+                        finish();
+                    } else if (currentUser.getUserType().equals(UserType.STUDENT) ||
+                            currentUser.getUserType().equals(UserType.PARENT)){
+                        startActivity(new Intent(EditProfileActivity.this, StudentHomeActivity.class)
+                                .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+                        finish();
+                    } else {
+                        new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                .setIcon(R.drawable.ic_error_outline)
+                                .setTitle("Error")
+                                .setMessage("User type not defined!\nPlease contact system admin to get this fixed.")
+                                .setPositiveButton("Ok", (dialog1, which1) -> finish())
+                                .show();
+                    }
+                })
+                .show();*/
+
+
+
+
+
+
+
+
+
+
 
         if (profileUser == null || currentUser == null)
             new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
@@ -77,8 +136,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 subjectSelect.setVisibility(View.VISIBLE);
                 lblSelected.setVisibility(View.VISIBLE);
             }
-        } else if (!currentUser.isNewUser()) {
-            date = currentUser.getDob();
+        } else if (!profileUser.isNewUser()) {
+            date = profileUser.getDob();
         }
 
         Button btnSave = findViewById(R.id.btnSave);
@@ -117,75 +176,32 @@ public class EditProfileActivity extends AppCompatActivity {
 
             tempUser.setFirstName(fname.getEditText().getText().toString());
             tempUser.setSurname(sname.getEditText().getText().toString());
-
-            tempUser.setPhone(phone.getEditText().getText().toString());
-
             tempUser.setOtherNames(oname.getEditText().getText().toString());
             tempUser.setDisplayName(dname.getEditText().getText().toString());
+            tempUser.setPhone(phone.getEditText().getText().toString());
             tempUser.setAddress(address.getEditText().getText().toString());
 
-            MyProgressDialog progressDialog = new MyProgressDialog(EditProfileActivity.this);
+            progressDialog = new MyProgressDialog(EditProfileActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            if (currentUser.isNewUser()) {
-                // TODO: 2020/04/24 PUT VALID DEFAULT PASSWORD
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(currentUser.getEmail(), "12345678")
+            if ((currentUser.getId() == profileUser.getId()) && profileUser.isNewUser()) {
+                if (Objects.requireNonNull(password.getEditText()).getText().toString().isEmpty()) {
+                    password.getEditText().setError("Password cannot be empty!");
+                    password.getEditText().requestFocus();
+                    return;
+                }
+
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(currentUser.getEmail(), currentUser.getEmail())
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                currentUser = tempUser;
-                                currentUser.setNewUser(false);
-                                currentUser.setDob(date);
-
                                 String pass = Objects.requireNonNull(password.getEditText()).getText().toString();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 assert user != null;
                                 user.updatePassword(pass)
-                                        .addOnSuccessListener(aVoid -> FirebaseFirestore.getInstance().collection(CollectionName.USERS)
-                                                .document(currentUser.getId())
-                                                .set(currentUser)
-                                                .addOnSuccessListener(aVoid1 -> {
-                                                    progressDialog.dismiss();
-                                                    new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
-                                                            .setIcon(R.drawable.ic_success)
-                                                            .setTitle("Success")
-                                                            .setMessage("Profile updated!")
-                                                            .setPositiveButton("Ok", (dialog, which) -> {
-                                                                if (currentUser.getUserType().equals(UserType.ADMIN)){
-                                                                    startActivity(new Intent(EditProfileActivity.this, AdminHomeActivity.class)
-                                                                            .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
-                                                                    finish();
-                                                                } else if (currentUser.getUserType().equals(UserType.TEACHER)){
-                                                                    startActivity(new Intent(EditProfileActivity.this, TeacherHomeActivity.class)
-                                                                            .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
-                                                                    finish();
-                                                                } else if (currentUser.getUserType().equals(UserType.STUDENT) ||
-                                                                        currentUser.getUserType().equals(UserType.PARENT)){
-                                                                    startActivity(new Intent(EditProfileActivity.this, StudentHomeActivity.class)
-                                                                            .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
-                                                                    finish();
-                                                                } else {
-                                                                    new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
-                                                                            .setIcon(R.drawable.ic_error_outline)
-                                                                            .setTitle("Error")
-                                                                            .setMessage("User type not defined!\nPlease contact system admin to get this fixed.")
-                                                                            .setPositiveButton("Ok", (dialog1, which1) -> finish())
-                                                                            .show();
-                                                                }
-                                                            })
-                                                            .show();
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    progressDialog.dismiss();
-                                                    new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
-                                                            .setIcon(R.drawable.ic_error_outline)
-                                                            .setTitle("Error")
-                                                            .setMessage(e.getMessage())
-                                                            .setPositiveButton("Ok", null)
-                                                            .show();
-                                                }))
+                                        .addOnSuccessListener(aVoid -> saveUser(tempUser))
                                         .addOnFailureListener(e -> {
                                             progressDialog.dismiss();
                                             new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
@@ -274,6 +290,199 @@ public class EditProfileActivity extends AppCompatActivity {
         View.OnClickListener onClickListener = v -> new DatePickerDialog(EditProfileActivity.this, dateSetListener, myCal.get(Calendar.YEAR), myCal.get(Calendar.MONTH), myCal.get(Calendar.DAY_OF_MONTH)).show();
         btnDOB.setOnClickListener(onClickListener);
         Objects.requireNonNull(dob.getEditText()).setOnClickListener(onClickListener);
+    }
+
+    private void saveUser(UserModel userModel) {
+        FirebaseFirestore.getInstance().collection(CollectionName.USERS)
+                .document(userModel.getId())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot != null) {
+                            if (userModel.getUserType().equals(UserType.STUDENT)) {
+                                studentModel = documentSnapshot.toObject(StudentModel.class);
+                                studentModel.setId(documentSnapshot.getId());
+
+                                Toast.makeText(EditProfileActivity.this, studentModel.getClassId(), Toast.LENGTH_LONG).show();
+
+                                studentModel.setFirstName(userModel.getFirstName());
+                                studentModel.setOtherNames(userModel.getOtherNames());
+                                studentModel.setSurname(userModel.getSurname());
+                                studentModel.setDisplayName(userModel.getDisplayName());
+                                studentModel.setDob(userModel.getDob());
+
+                                // TODO: 2020/06/10 GET GENDER
+
+                                studentModel.setAddress(userModel.getAddress());
+                                studentModel.setPhone(userModel.getPhone());
+                                studentModel.setDob(userModel.getDob());
+
+                                studentModel.setNewUser(false);
+
+                                FirebaseFirestore.getInstance().collection(CollectionName.USERS)
+                                        .document(studentModel.getId())
+                                        .set(studentModel)
+                                        .addOnSuccessListener(aVoid -> finishProfileUpdate())
+                                        .addOnFailureListener(e -> {
+                                            progressDialog.dismiss();
+                                            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                                    .setIcon(R.drawable.ic_error_outline)
+                                                    .setTitle("Error")
+                                                    .setMessage(e.getMessage())
+                                                    .setPositiveButton("Ok", null)
+                                                    .show();
+                                        });
+
+                            } else if (userModel.getUserType().equals(UserType.PARENT)) {
+                                parentModel = documentSnapshot.toObject(ParentModel.class);
+
+                                parentModel = documentSnapshot.toObject(ParentModel.class);
+                                parentModel.setId(documentSnapshot.getId());
+
+                                parentModel.setFirstName(userModel.getFirstName());
+                                parentModel.setOtherNames(userModel.getOtherNames());
+                                parentModel.setSurname(userModel.getSurname());
+                                parentModel.setDisplayName(userModel.getDisplayName());
+                                parentModel.setDob(userModel.getDob());
+
+                                // TODO: 2020/06/10 GET GENDER
+
+                                parentModel.setAddress(userModel.getAddress());
+                                parentModel.setPhone(userModel.getPhone());
+                                parentModel.setDob(userModel.getDob());
+
+                                parentModel.setNewUser(userModel.isNewUser());
+
+                                FirebaseFirestore.getInstance().collection(CollectionName.USERS)
+                                        .document(parentModel.getId())
+                                        .set(parentModel)
+                                        .addOnSuccessListener(aVoid -> finishProfileUpdate())
+                                        .addOnFailureListener(e -> {
+                                            progressDialog.dismiss();
+                                            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                                    .setIcon(R.drawable.ic_error_outline)
+                                                    .setTitle("Error")
+                                                    .setMessage(e.getMessage())
+                                                    .setPositiveButton("Ok", null)
+                                                    .show();
+                                        });
+                            } else if (userModel.getUserType().equals(UserType.ADMIN)) {
+                                adminModel = documentSnapshot.toObject(AdminModel.class);
+
+                                adminModel = documentSnapshot.toObject(AdminModel.class);
+                                adminModel.setId(documentSnapshot.getId());
+
+                                adminModel.setFirstName(userModel.getFirstName());
+                                adminModel.setOtherNames(userModel.getOtherNames());
+                                adminModel.setSurname(userModel.getSurname());
+                                adminModel.setDisplayName(userModel.getDisplayName());
+                                adminModel.setDob(userModel.getDob());
+
+                                // TODO: 2020/06/10 GET GENDER
+
+                                adminModel.setAddress(userModel.getAddress());
+                                adminModel.setPhone(userModel.getPhone());
+                                adminModel.setDob(userModel.getDob());
+
+                                adminModel.setNewUser(userModel.isNewUser());
+
+                                FirebaseFirestore.getInstance().collection(CollectionName.USERS)
+                                        .document(adminModel.getId())
+                                        .set(adminModel)
+                                        .addOnSuccessListener(aVoid -> finishProfileUpdate())
+                                        .addOnFailureListener(e -> {
+                                            progressDialog.dismiss();
+                                            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                                    .setIcon(R.drawable.ic_error_outline)
+                                                    .setTitle("Error")
+                                                    .setMessage(e.getMessage())
+                                                    .setPositiveButton("Ok", null)
+                                                    .show();
+                                        });
+                            } else if (userModel.getUserType().equals(UserType.TEACHER)) {
+                                teacherModel = documentSnapshot.toObject(TeacherModel.class);
+
+                                teacherModel = documentSnapshot.toObject(TeacherModel.class);
+                                teacherModel.setId(documentSnapshot.getId());
+
+                                teacherModel.setFirstName(userModel.getFirstName());
+                                teacherModel.setOtherNames(userModel.getOtherNames());
+                                teacherModel.setSurname(userModel.getSurname());
+                                teacherModel.setDisplayName(userModel.getDisplayName());
+                                teacherModel.setDob(userModel.getDob());
+
+                                // TODO: 2020/06/10 GET GENDER
+
+                                teacherModel.setAddress(userModel.getAddress());
+                                teacherModel.setPhone(userModel.getPhone());
+                                teacherModel.setDob(userModel.getDob());
+
+                                teacherModel.setNewUser(userModel.isNewUser());
+
+                                FirebaseFirestore.getInstance().collection(CollectionName.USERS)
+                                        .document(teacherModel.getId())
+                                        .set(teacherModel)
+                                        .addOnSuccessListener(aVoid -> finishProfileUpdate())
+                                        .addOnFailureListener(e -> {
+                                            progressDialog.dismiss();
+                                            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                                    .setIcon(R.drawable.ic_error_outline)
+                                                    .setTitle("Error")
+                                                    .setMessage(e.getMessage())
+                                                    .setPositiveButton("Ok", null)
+                                                    .show();
+                                        });
+                            } else {
+                                progressDialog.dismiss();
+                                new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                        .setIcon(R.drawable.ic_error_outline)
+                                        .setTitle("Error")
+                                        .setMessage("Unable to get your user-type!\nContact system admin to get this rectified.")
+                                        .setPositiveButton("Ok", null)
+                                        .show();
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                                .setIcon(R.drawable.ic_error_outline)
+                                .setTitle("Error")
+                                .setMessage(e.getMessage())
+                                .setPositiveButton("Ok", null)
+                                .show();
+                    }
+                });
+    }
+
+    private void finishProfileUpdate() {
+        progressDialog.dismiss();
+
+        if (currentUser.getUserType().equals(UserType.ADMIN)){
+            startActivity(new Intent(EditProfileActivity.this, AdminHomeActivity.class)
+                    .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+            finish();
+        } else if (currentUser.getUserType().equals(UserType.TEACHER)){
+            startActivity(new Intent(EditProfileActivity.this, TeacherHomeActivity.class)
+                    .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+            finish();
+        } else if (currentUser.getUserType().equals(UserType.STUDENT) ||
+                currentUser.getUserType().equals(UserType.PARENT)){
+            startActivity(new Intent(EditProfileActivity.this, StudentHomeActivity.class)
+                    .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
+            finish();
+        } else {
+            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
+                    .setIcon(R.drawable.ic_error_outline)
+                    .setTitle("Error")
+                    .setMessage("User type not defined!\nPlease contact system admin to get this fixed.")
+                    .setPositiveButton("Ok", (dialog1, which1) -> finish())
+                    .show();
+        }
     }
 
     final Calendar myCal = Calendar.getInstance();

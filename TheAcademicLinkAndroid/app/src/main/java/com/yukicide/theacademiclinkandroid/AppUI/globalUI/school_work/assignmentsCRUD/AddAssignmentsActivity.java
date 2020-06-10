@@ -74,7 +74,7 @@ public class AddAssignmentsActivity extends AppCompatActivity {
         else if (currentUser.getUserType().equals(UserType.TEACHER))
             teacher = (new Gson()).fromJson(getIntent().getStringExtra(StringExtras.CURRENT_USER), TeacherModel.class);
 
-        storageReference = FirebaseStorage.getInstance().getReference("items/" + subjectModel.getId());
+        storageReference = FirebaseStorage.getInstance().getReference("assignments/" + subjectModel.getId());
 
         ImageView addDoc = findViewById(R.id.btnAddDoc);
         addDoc.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class AddAssignmentsActivity extends AppCompatActivity {
         Button save = findViewById(R.id.btnSave);
         save.setOnClickListener(v -> {
             /*DatePicker datePicker = findViewById(R.id.datePicker1);*/
-            // TODO: 2020/06/06 GET SELECTED YEAR 
+            // TODO: 2020/06/06 GET SELECTED YEAR
             date = new Date((new Date()).getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
 
             TextInputLayout txtTitle = findViewById(R.id.txtNotesTitle),
@@ -140,7 +140,10 @@ public class AddAssignmentsActivity extends AppCompatActivity {
 
             progressBarUpload.setVisibility(View.VISIBLE);
 
-            final StorageReference fileRef = storageReference.child(doc.getPath() + new Date() + "." + fileExtension(doc));
+            String myFormat = "dd-MM-yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+            final StorageReference fileRef = storageReference.child(sdf.format(new Date()) + "/" + getFileName(doc));
             uploadTask = fileRef.putFile(doc)
                     .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         AttachmentModel document = new AttachmentModel(getFileName(doc), uri.toString(), true);

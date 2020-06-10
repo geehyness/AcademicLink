@@ -40,8 +40,10 @@ import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.TeacherMode
 import com.yukicide.theacademiclinkandroid.Repositories.Models.Users.UserModel;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddNotesActivity extends AppCompatActivity {
     private UserModel currentUser;
@@ -150,7 +152,7 @@ public class AddNotesActivity extends AppCompatActivity {
     private void docRecyclerInit() {
         RecyclerView catRecyclerView = findViewById(R.id.docsRecycler);
         catRecyclerView.setHasFixedSize(false);
-        docAdapter = new DocumentAdapter(docStringArray);
+        docAdapter = new DocumentAdapter(docStringArray, false);
         RecyclerView.LayoutManager catLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         catRecyclerView.setLayoutManager(catLayoutManager);
         catRecyclerView.setAdapter(docAdapter);
@@ -262,7 +264,10 @@ public class AddNotesActivity extends AppCompatActivity {
                     .setPositiveButton("Ok", null)
                     .show());
         } else {
-            final StorageReference fileRef = storageReference.child(docStringArray.get(position).getUrl() + new Date() + "." + fileExtension(docArray.get(position)));
+            String myFormat = "dd-MM-yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+            final StorageReference fileRef = storageReference.child(sdf.format(new Date()) + "/" + getFileName(docArray.get(position)));
             uploadTask = fileRef.putFile(docArray.get(position))
                     .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         onlineDocArray.add(new AttachmentModel(getFileName(docArray.get(position)), uri.toString(), true));

@@ -21,6 +21,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
     private ArrayList<AttachmentModel> DocumentList;
     private DocumentAdapter.OnItemClickListener audioListener;
     private DocumentAdapter.OnItemLongClickListener audioMenuListener;
+    private boolean isDisplay;
 
     public interface OnItemClickListener {
         void onItemClick(int position) throws IOException;
@@ -41,12 +42,14 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
 
     static class NotificationViewHolder extends RecyclerView.ViewHolder {
         TextView docTitle;
+        TextView linkType;
         ImageView docDismiss;
 
         NotificationViewHolder(View itemView, final DocumentAdapter.OnItemClickListener listener, final DocumentAdapter.OnItemLongClickListener menuListener) {
             super(itemView);
             docTitle = itemView.findViewById(R.id.txtDocTitle);
             docDismiss = itemView.findViewById(R.id.btnDocDismiss);
+            linkType = itemView.findViewById(R.id.txtType);
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
@@ -87,8 +90,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
         }
     }
 
-    public DocumentAdapter(ArrayList<AttachmentModel> exampleList) {
+    public DocumentAdapter(ArrayList<AttachmentModel> exampleList, boolean isDisplay) {
         DocumentList = exampleList;
+        this.isDisplay = isDisplay;
     }
 
     @NonNull
@@ -105,6 +109,14 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Notifi
         String currentItem = DocumentList.get(i).getUrl();
 
         notificationViewHolder.docTitle.setText(currentItem);
+
+        if (!DocumentList.get(i).isDoc()) {
+            notificationViewHolder.linkType.setText("Link");
+        }
+
+        if (isDisplay) {
+            notificationViewHolder.docDismiss.setVisibility(View.GONE);
+        }
     }
 
     @Override

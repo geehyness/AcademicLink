@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                         .get()
                         .addOnSuccessListener(documentSnapshot -> {
                             UserModel currentUser = documentSnapshot.toObject(UserModel.class);
+                            currentUser.setId(documentSnapshot.getId());
 
                             if (currentUser != null) {
                                 if (!currentUser.isNewUser()) {
