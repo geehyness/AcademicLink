@@ -491,9 +491,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void finishProfileUpdate() {
         progressDialog.dismiss();
 
-        displayInfo();
-
-        /*if (currentUser.getUserType().equals(UserType.ADMIN)){
+        if (currentUser.getUserType().equals(UserType.ADMIN)){
             startActivity(new Intent(EditProfileActivity.this, AdminHomeActivity.class)
                     .putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
             finish();
@@ -513,7 +511,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     .setMessage("User type not defined!\nPlease contact system admin to get this fixed.")
                     .setPositiveButton("Ok", (dialog1, which1) -> finish())
                     .show();
-        }*/
+        }
     }
 
     final Calendar myCal = Calendar.getInstance();
@@ -593,38 +591,5 @@ public class EditProfileActivity extends AppCompatActivity {
             } else {
                 gender.setSelection(1);
             }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void displayInfo() {
-        if(profileUser.getUserType().equals(UserType.STUDENT)) {
-            studentModel = (new Gson()).fromJson(getIntent().getStringExtra(StringExtras.PROFILE_USER), StudentModel.class);
-
-            new AlertDialog.Builder(EditProfileActivity.this, R.style.CustomDialogTheme)
-                    .setIcon(R.drawable.ic_error_outline)
-                    .setTitle("Error")
-                    .setMessage("Student info\n\n" + (new Gson()).toJson(studentModel))
-
-                    .setCancelable(false)
-                    .setPositiveButton("Ok", (dialog, which) -> {
-                        startActivity(new Intent(getApplicationContext(), StudentHomeActivity.class).putExtra(StringExtras.CURRENT_USER, (new Gson()).toJson(currentUser)));
-                        finish();
-                    })
-                    .show();
-        }
     }
 }
