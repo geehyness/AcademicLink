@@ -50,10 +50,6 @@ import java.util.Objects;
 
 public class EditProfileActivity extends AppCompatActivity {
     UserModel currentUser, profileUser;
-    StudentModel studentModel;
-    TeacherModel teacherModel;
-    AdminModel adminModel;
-    ParentModel parentModel;
 
     TextInputLayout password, email, fname, oname, sname, dname, dob, phone, address;
     Spinner gender;
