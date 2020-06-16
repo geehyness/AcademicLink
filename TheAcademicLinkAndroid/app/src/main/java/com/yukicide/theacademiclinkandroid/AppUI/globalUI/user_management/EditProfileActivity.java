@@ -283,19 +283,22 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Date picker dialog
+
+        final Calendar cldr = Calendar.getInstance();
+        int day = cldr.get(Calendar.DAY_OF_MONTH);
+        int month = cldr.get(Calendar.MONTH);
+        int year = cldr.get(Calendar.YEAR);
 
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                myCal.set(Calendar.YEAR, year);
-                myCal.set(Calendar.YEAR, year);
-                myCal.set(Calendar.YEAR, year);
-                upDateLabel(myCal.getTime());
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                dob.getEditText().setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
             }
         };
 
         btnDOB = findViewById(R.id.btnDOB);
-        View.OnClickListener onClickListener = v -> new DatePickerDialog(EditProfileActivity.this, dateSetListener, myCal.get(Calendar.YEAR), myCal.get(Calendar.MONTH), myCal.get(Calendar.DAY_OF_MONTH)).show();
+        View.OnClickListener onClickListener = v -> new DatePickerDialog(EditProfileActivity.this, dateSetListener, year, month, day).show();
         btnDOB.setOnClickListener(onClickListener);
         Objects.requireNonNull(dob.getEditText()).setOnClickListener(onClickListener);
     }
@@ -513,6 +516,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     .show();
         }
     }
+
+    // Date helper
 
     final Calendar myCal = Calendar.getInstance();
     private void upDateLabel(Date tempDate) {
